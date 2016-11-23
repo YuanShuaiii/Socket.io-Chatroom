@@ -160,6 +160,7 @@
     <div class="online"></div>
   </div>
   <script>
+      var name;
       var socket = io();
 
     $('#bt1').on('click', function () {
@@ -168,6 +169,7 @@
        $('#m1').css('display', 'none');
        $('.main').css('display', 'block');
        $('#bt2').attr('index', 2);
+       name = $('#m1').val();
        socket.emit('name', $('#m1').val())
     });
     $('#bt2').on('click', function () {
@@ -178,7 +180,6 @@
         $('#bt2').attr('index', 1)
     });
     $('#form2').submit(function(){
-        console.log($('#bt2').attr('index'));
         if($('#bt2').attr('index')==2){
             socket.emit('chat message', $('#m1').val() + "    :       " + $('#m').val());
         }else {
@@ -188,13 +189,24 @@
         return false;
     });
 
-      socket.on('arr', function(msg){
-          $('.online').html(msg);
-      });
+
+    socket.on('arr', function(msg){
+        $('.online').html(msg);
+    });
 
     socket.on('chat message', function(msg){
       $('#messages').append($('<li></li>').text(msg));
+//      socket.emit('ferret', 'tobi', function (data) {
+//          console.log(data);
+////          $('li').append($('<span></span>').text(' 已读'));
+//      })
     });
+
+//    socket.on('connect', function () {
+//        socket.emit('ferret', 'tobi', function (data) {
+//            console.log(data);
+//        })
+//    });
 
     socket.on('name', function(name){
         $('#messages').append($('<li></li>').text(name));
@@ -202,7 +214,9 @@
 
     socket.on('broadcast', function(msg){
       $('#join').append($('<li></li>').text(msg));
-    })
+    });
+
+
   </script>
 </body>
 </html>
