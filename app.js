@@ -44,7 +44,7 @@ io.on('connection', function(socket){
         for (var i = 0; i < arr.length; i++) {
             var nameTemp = arr[i];
             if(nameTemp==delName){
-                arr.splice(i,1)
+                 arr.splice(i,1)
             }
         }
       socket.broadcast.emit('broadcast', socket.name + 'leaved');
