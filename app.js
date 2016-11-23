@@ -12,42 +12,44 @@ app.get('/', function(req, res){
 });
 
 var arr =[];
+var soc = [];
 
 io.on('connection', function(socket){
+    socket.on('name', function (name) {
+        socket.name = name;
+        soc.push(socket);
+        arr.push(name);
+        socket.broadcast.emit('broadcast', name+'joined');
+        socket.emit('arr', arr.join(','));
+        socket.broadcast.emit('arr', arr.join(','));
+    });
+    socket.on('chat message', function(msg){
+        io.emit('chat message', msg)
+    });
 
 
-  // socket.broadcast.emit('broadcast');
-  socket.on('name', function (name) {
-      socket.name = name;
-     arr.push(name);
-     console.log('msg');
-     socket.broadcast.emit('broadcast', name+'joined');
-     socket.emit('arr', arr.join(','));
-     socket.broadcast.emit('arr', arr.join(','));
-  });
+    //private
+    socket.on('pre', function (msg) {
+        soc.forEach(function (so) {
+            if(msg.name == so.name){
+                so.emit('to',socket.name + "[私密]:" + msg.data);
+            }
+        })
+    });
 
 
-  socket.on('chat message', function(msg){
-    // console.log(msg);
-    io.emit('chat message', msg)
-  });
-
-
-
-  socket.on('disconnect', function () {
-      var  delName = socket.name;
-      for (var i = 0; i < arr.length; i++) {
-          var nameTemp = arr[i];
-          if(nameTemp==delName){
-              arr.splice(i,1)
-          }
-
-      }
-      // arr.remove();
+    //disconnect
+    socket.on('disconnect', function () {
+        var  delName = socket.name;
+        for (var i = 0; i < arr.length; i++) {
+            var nameTemp = arr[i];
+            if(nameTemp==delName){
+                arr.splice(i,1)
+            }
+        }
       socket.broadcast.emit('broadcast', socket.name + 'leaved');
       socket.broadcast.emit('arr', arr.join(','));
-      // socket.broadcast.emit('arr', arr.join(','));
-  })
+  });
 });
 
 
