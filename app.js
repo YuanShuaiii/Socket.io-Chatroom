@@ -22,6 +22,7 @@ io.on('connection', function(socket){
      arr.push(name);
      console.log('msg');
      socket.broadcast.emit('broadcast', name+'joined');
+     socket.emit('arr', arr.join(','));
      socket.broadcast.emit('arr', arr.join(','));
   });
 
