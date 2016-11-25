@@ -38,6 +38,9 @@
     <ul id="join"></ul>
     <p id="p">Online:</p>
     <div class="online"></div>
+    <div class="typing" style="margin-left: 100px;margin-top: -50px;color: #00B7FF;transition: .5s ease-in-out">
+        <ul id="ul"></ul>
+    </div>
   </div>
 <script>
     var name;
@@ -85,6 +88,23 @@
 
        return false;
     });
+
+
+    //typing
+    $('#m').keydown(function () {
+        if($('.main').css('display')=='block'){
+            socket.emit('typing', {
+                name: $('#m1').val(),
+                data: 'is typing...'
+            });
+        }
+    });
+
+
+
+
+
+    //
     socket.on('to', function (msg) {
         $('#messages').append($('<li></li>').text(msg));
     });
@@ -104,6 +124,13 @@
     socket.on('broadcast', function(msg){
       $('#join').append($('<li></li>').text(msg));
     });
+
+    socket.on('showtyping', function (msg) {
+        $('#ul').html(msg);
+        setTimeout(function () {
+            $('#ul').html('');
+        },1000)
+    })
 
   </script>
 </body>

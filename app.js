@@ -50,6 +50,13 @@ io.on('connection', function(socket){
       socket.broadcast.emit('broadcast', socket.name + 'leaved');
       socket.broadcast.emit('arr', arr.join(','));
   });
+
+
+    //typing
+    socket.on('typing', function (msg) {
+        console.log('typing' + msg.name);
+        socket.broadcast.emit('showtyping', msg.name + msg.data)
+    })
 });
 
 
